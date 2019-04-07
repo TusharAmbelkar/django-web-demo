@@ -27,33 +27,36 @@ def run_external_process(input_img_filename, output_img_filename):
         print(message)
         return 0
 
-while 1:
-    # WAIT ON DIRECTORY CHANGE (by POLLING)
-    while 1:
-        qfnames = glob.glob(os.path.join(BASE_DIR, 'media/*.query.done'))
-        if len(qfnames) > 0:
-            break
-        else:
-            time.sleep(1)
+def run():
+	while 1:
+		# WAIT ON DIRECTORY CHANGE (by POLLING)
+		while 1:
+		    qfnames = glob.glob(os.path.join(BASE_DIR, 'media/*.query.done'))
+		    if len(qfnames) > 0:
+		        break
+		    else:
+		        time.sleep(1)
 
-    # ACT ON QUERIES
-    print(qfnames)
-    for qfname in qfnames:
-        tag = qfname.split('/')[-1].split('.')[-3]
-        print("qfname: %s, tag: %s" % (qfname, tag))
-        input_img_filename = os.path.join(BASE_DIR, 'media/%s_tmp.jpg' % (tag))
-        output_img_filename = os.path.join(BASE_DIR, 'media/%s_tmp_out.jpg' % (tag))
+		# ACT ON QUERIES
+		print(qfnames)
+		for qfname in qfnames:
+		    tag = qfname.split('/')[-1].split('.')[-3]
+		    print("qfname: %s, tag: %s" % (qfname, tag))
+		    input_img_filename = os.path.join(BASE_DIR, 'media/%s_tmp.jpg' % (tag))
+		    output_img_filename = os.path.join(BASE_DIR, 'media/%s_tmp_out.jpg' % (tag))
 
-        # IMAGE PROCESSING...
-        print('start processing %s' % (tag))
-        print('input: %s, output: %s' % (input_img_filename, output_img_filename))
-        succeed = run_external_process(input_img_filename, output_img_filename)
-        print('finish processing %s , return: %s' % (tag, str(succeed)))
-        
-        if succeed:
-            open(os.path.join(BASE_DIR, 'media/%s.result.done' % (tag)),'w').close()
-            os.remove(qfname)
-        else:
-            open(os.path.join(BASE_DIR, 'media/%s.result.err' % (tag)),'w').close()
-            os.remove(qfname)
-            
+		    # IMAGE PROCESSING...
+		    print('start processing %s' % (tag))
+		    print('input: %s, output: %s' % (input_img_filename, output_img_filename))
+		    succeed = run_external_process(input_img_filename, output_img_filename)
+		    print('finish processing %s , return: %s' % (tag, str(succeed)))
+		    
+		    if succeed:
+		        open(os.path.join(BASE_DIR, 'media/%s.result.done' % (tag)),'w').close()
+		        os.remove(qfname)
+		    else:
+		        open(os.path.join(BASE_DIR, 'media/%s.result.err' % (tag)),'w').close()
+		        os.remove(qfname)
+
+
+		        
